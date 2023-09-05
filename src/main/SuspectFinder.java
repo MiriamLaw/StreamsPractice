@@ -19,25 +19,39 @@ public class SuspectFinder {
 		// first filter out all the suspects with red hair...
 		// then filter out all the suspects with glasses
 		// then group by their birth year (Collectors.groupingBy(Suspect::getBirthYear, Collectors.toList())
-		//   -> this will return the birth year and a list of suspect obects (if done correctly, there should
+		//   -> this will return the birth year and a list of suspect objects (if done correctly, there should
 		//		only be one suspect object.
 		
 		
 		Map<Integer, List<Suspect>> suspects = null;
-		
-		
 		// APPLY FILTERING LOGIC HERE....
+		List<Suspect> filteredSuspects = suspectLineUp.stream()
+														.filter(suspect -> !suspect.getHairColor().equalsIgnoreCase("red"))
+														.filter(suspect -> !suspect.getHasGlasses())
+														.collect(Collectors.toList());
 		
+		Map<Integer, List<Suspect>>  suspectsByBirthYear = filteredSuspects.stream()
+																			.collect(Collectors.groupingBy(Suspect::getBirthYear, Collectors.toList())
+																	  );
+																	  
+															
 		
-		
-		String guilty = suspects.entrySet()
-				.stream()
-				.map(entry -> entry.getValue().get(0).getName())
-				.findFirst()
-				.orElse(null);
+		Map<Integer, List<Suspect>> shortList = suspectsByBirthYear;
+
+		String guilty = shortList.entrySet()
+								.stream()
+								.map(entry -> entry.getValue().get(0).getName())
+								.findFirst()
+								.orElse(null);
 
 		System.out.println(guilty);
 		
 	}
 
 }
+
+
+
+
+
+
